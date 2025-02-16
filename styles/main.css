@@ -23,9 +23,10 @@ body {
 
 .control-container {
     position: absolute;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 84px;
+    right: 24px;
+    left: auto;
+    transform: none;
     display: none;
     flex-direction: column;
     gap: 15px;
@@ -33,6 +34,8 @@ body {
     padding: 24px;
     border-radius: 16px;
     z-index: 1000;
+    pointer-events: auto;
+    box-shadow: 0px 8px 16px #0000002b;
 }
 
 .checkbox-container {
@@ -84,23 +87,35 @@ body {
     top: 0;
     left: 0;
     width: 100%;
+    height: 100%;
     z-index: 1000;
+    pointer-events: none;
 }
 
 .container-content {
     max-width: 1440px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 24px;
+    height: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    position: relative;
+    box-sizing: border-box;
+    pointer-events: none;
+    flex-direction: column;
+}
+
+.title, .github-link, .controls-toggle, .control-container {
+    pointer-events: auto;
 }
 
 .github-link {
     color: var(--text-color);
     opacity: 0.8;
-    margin-top: 36px;
     transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
 }
 
 .github-link:hover {
@@ -126,12 +141,83 @@ body {
 }
 
 .title {
-    margin-top: 36px;
     font-family: 'Outfit', sans-serif;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 500;
     color: var(--text-color);
     text-align: left;
+}
+
+.header-group {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.footer-group {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    justify-content: space-between;
+}
+
+.visitor-count {
+    color: var(--text-color);
+    font-size: 1.25rem;
+    opacity: 0.5;
+}
+
+.controls-toggle {
+    background: transparent;
+    /* position: static; */  /* Override the absolute positioning */
+    bottom: auto;
+    right: auto;
+    width: 48px;
+    margin: -12px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    z-index: 1001;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.controls-toggle:hover {
+    transform: scale(1.1);
+}
+
+.controls-toggle .material-symbols-rounded {
+    color: #000;
+    font-size: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+    
+    .controls-toggle .material-symbols-rounded {
+        color: #fff;
+    }
+
+    .control-container {
+        background: rgba(69, 69, 69, 0.8);
+        color: #fff;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .controls-toggle .material-symbols-rounded {
+        color: #000;
+    }
+
+    .control-container {
+        background: rgba(255, 255, 255, 0.8);
+        color: #000;
+    }
 }
 
 @media (max-width: 768px) {
@@ -140,25 +226,194 @@ body {
         max-width: 300px;
         padding: 12px;
         gap: 15px;
+        bottom: 72px;
+        right: 12px;
     }
     
     .checkbox-container {
         flex-direction: column;
         gap: 10px;
     }
-
-    .title {
-        font-size: 2rem;
-        margin-top: 20px;
-        padding: 0 20px;
-    }
-
-    .github-link {
-        margin-right: 20px;
-        margin-top: 20px;
-    }
     
     .container-content {
-        padding: 0 20px;
+        padding: 12px;
+    }
+
+    .controls-toggle {
+        margin: -16px 0px ;
+    }
+
+    .header-group {
+        gap: 16px;
+    }
+
+    .footer-group {
+        bottom: 0;
+        right: 0;
+        padding: 12px;
+        gap: 16px;
+    }
+
+
+}
+
+.color-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.color-controls label {
+    min-width: 80px;
+}
+
+.color-controls input[type="color"] {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.audio-container {
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.audio-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.audio-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.play-pause-btn, .loop-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.play-pause-btn:hover, .loop-btn:hover {
+    transform: scale(1.1);
+}
+
+.play-pause-btn .material-symbols-rounded,
+.loop-btn .material-symbols-rounded {
+    font-size: 24px;
+    color: var(--text-color);
+}
+
+@media (prefers-color-scheme: dark) {
+    .play-pause-btn .material-symbols-rounded,
+    .loop-btn .material-symbols-rounded {
+        color: #fff;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .play-pause-btn .material-symbols-rounded,
+    .loop-btn .material-symbols-rounded {
+        color: #000;
+    }
+}
+
+.audio-input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    color: white;
+}
+
+.seek-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+    width: 100%;
+    flex-grow: 1;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.seekbar {
+    width: 100%;
+    height: 5px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    outline: none;
+}
+
+.seekbar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.time-display {
+    color: white;
+    font-size: 12px;
+    text-align: center;
+}
+
+.play-pause-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    margin-bottom: 8px;
+}
+
+.play-pause-btn:hover {
+    transform: scale(1.1);
+}
+
+.play-pause-btn .material-symbols-rounded {
+    font-size: 24px;
+    color: var(--text-color);
+}
+
+@media (prefers-color-scheme: dark) {
+    .play-pause-btn .material-symbols-rounded {
+        color: #fff;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .play-pause-btn .material-symbols-rounded {
+        color: #000;
     }
 }

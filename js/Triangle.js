@@ -3,14 +3,14 @@ import * as THREE from 'three';
 export class Triangle {
     static TOTAL_DEPTH = 0.2;
     static CENTER_Z = 0;
-    static TUBE_RADIUS = 0.01;  // Thickness of the lines
+    static TUBE_RADIUS = 0.005;  // Thickness of the lines
 
     static createEdgeTubes(vertices, isDarkTheme) {
         const tubes = new THREE.Group();
         const tubeMaterial = new THREE.MeshStandardMaterial({
             color: isDarkTheme ? 0x000000 : 0xffffff,
             transparent: true,
-            opacity: 1,
+            opacity: 0.8,
             emissive: isDarkTheme ? 0x000000 : 0xffffff,
             emissiveIntensity: 2,
             metalness: 0.5,
@@ -26,7 +26,7 @@ export class Triangle {
             const tubeGeometry = new THREE.TubeGeometry(
                 path,
                 1,
-                this.TUBE_RADIUS * (isDarkTheme ? 1 : 0.5),
+                this.TUBE_RADIUS * (isDarkTheme ? 1 : 0),
                 8,
                 false
             );

@@ -4,9 +4,8 @@ export class ParticleSystem {
     constructor(scene, isDarkTheme) {
         this.scene = scene;
         this.particles = new THREE.Group();
-        this.particleCount = 200;
+        this.particleCount = 40;
         this.windForce = 0.002;
-        this.particleSpeed = 0.01;
         this.isDarkTheme = isDarkTheme;
         
         this.createParticles();
@@ -16,12 +15,17 @@ export class ParticleSystem {
     createParticles() {
         for (let i = 0; i < this.particleCount; i++) {
             const geometry = new THREE.SphereGeometry(0.02, 8, 8);
+            
+            // Generate random hue but keep saturation and lightness constant
+            const hue = Math.random();
+            const color = new THREE.Color().setHSL(hue, this.isDarkTheme ? 0.5 : 0.8, 0.5);
+            
             const material = new THREE.MeshStandardMaterial({
-                color: this.isDarkTheme ? 0xffffff : 0x000000,
-                emissive: this.isDarkTheme ? 0xffffff : 0x000000,
-                emissiveIntensity: 2.0, // Increased from 0.5
+                color: color,
+                emissive: color,
+                emissiveIntensity: 2.0,
                 transparent: true,
-                opacity: 1, // Increased from 0.6
+                opacity: 1,
                 metalness: 0.8,
                 roughness: 0.2
             });
@@ -33,23 +37,45 @@ export class ParticleSystem {
     }
 
     resetParticle(particle) {
-        particle.position.x = Math.random() * 30 - 10;
-        particle.position.y = Math.random() * 30 - 10;
-        particle.position.z = Math.random() * 10 - 5;
-        particle.userData.speed = Math.random() * 0.01 + 0.005;
+        // Generate points on a sphere
+        const phi = Math.acos(-1 + (2 * Math.random()));
+        const theta = 2 * Math.PI * Math.random();
+        const radius = 3 + Math.random() * 4; // Radius between 3 and 7
+
+        particle.position.x = radius * Math.sin(phi) * Math.cos(theta);
+        particle.position.y = radius * Math.sin(phi) * Math.sin(theta);
+        particle.position.z = radius * Math.cos(phi);
+        
+        particle.userData.orbit = {
+            radius: radius,
+            theta: theta,
+            phi: phi,
+            speed: (Math.random() * 0.0005 + 0.0002), // Reduced speed
+            verticalSpeed: (Math.random() * 0.0002 - 0.0001) // Very slow vertical motion
+        };
     }
 
     update() {
+        const time = Date.now() * 0.001; // Current time in seconds
+        
         this.particles.children.forEach(particle => {
-            // Apply wind force
-            particle.position.x += this.windForce;
-            particle.position.y += Math.sin(Date.now() * 0.001 + particle.position.x) * 0.002;
-            particle.position.z += (Math.random() - 0.5) * 0.001;
-
-            // Reset particle if it goes out of bounds
-            if (particle.position.x > 5) {
-                particle.position.x = -5;
-            }
+            const orbit = particle.userData.orbit;
+            
+            // Update angles
+            orbit.theta += orbit.speed;
+            orbit.phi += orbit.verticalSpeed;
+            
+            // Keep phi within bounds
+            orbit.phi = Math.max(0.1, Math.min(Math.PI - 0.1, orbit.phi));
+            
+            // Update position with smooth orbital motion
+            particle.position.x = orbit.radius * Math.sin(orbit.phi) * Math.cos(orbit.theta);
+            particle.position.y = orbit.radius * Math.sin(orbit.phi) * Math.sin(orbit.theta);
+            particle.position.z = orbit.radius * Math.cos(orbit.phi);
+            
+            // Add very subtle wave motion
+            particle.position.x += Math.sin(time + orbit.theta) * 0.02;
+            particle.position.y += Math.cos(time + orbit.theta) * 0.02;
         });
     }
 

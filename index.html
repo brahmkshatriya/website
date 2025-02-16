@@ -3,12 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Three.js Skewed Triangles Display</title>
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
+    <title>Shivam Brahmkshatriya's Site</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=pause,play_arrow,repeat,repeat_on,settings" />
     <script type="importmap">
         {
           "imports": {
@@ -25,6 +26,7 @@
         import { Triangle } from './js/Triangle.js';
         import { Controls } from './js/Controls.js';
         import { ParticleSystem } from './js/ParticleSystem.js';
+        import { updateVisitorCount } from './js/visitors.js';
 
         const scene = new THREE.Scene();
 
@@ -45,7 +47,7 @@
         const renderScene = new RenderPass(scene, camera);
         const bloomPass = new UnrealBloomPass(
             new THREE.Vector2(window.innerWidth, window.innerHeight),
-            isDark ? 0.9 : 0.25,
+            isDark ? 0.9 : 0.1,
             0.4,
             0
         );
@@ -85,6 +87,7 @@
         scene.add(light);
 
         const controls = new Controls(camera, group, scene, bloomPass);
+        document.querySelector('.control-container').style.display = 'none';
 
         const particleSystem = new ParticleSystem(scene, isDark);
         controls.setParticleSystem(particleSystem);
@@ -109,16 +112,26 @@
 
         window.addEventListener('resize', updateCameraAspect);
         updateCameraAspect();
+        
+        updateVisitorCount();
     </script>
 </head>
 
 <body>
     <div class="container">
         <div class="container-content">
-            <div class="title">brahmkshatriya.dev</div>
-            <a href="https://github.com/brahmkshatriya" class="github-link" target="_blank" rel="noopener noreferrer">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" />
-            </a>
+            <div class="header-group">
+                <div class="title">brahmkshatriya.dev</div>
+                <a href="https://github.com/brahmkshatriya" class="github-link" target="_blank" rel="noopener noreferrer">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" />
+                </a>
+            </div>
+            <div class="footer-group">
+                <div class="visitor-count">visitors: 0</div>
+                <button class="controls-toggle">
+                    <span class="material-symbols-rounded">settings</span>
+                </button>
+            </div>
         </div>
     </div>
 </body>
