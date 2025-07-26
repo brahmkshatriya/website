@@ -4,7 +4,7 @@ export async function updateVisitorCount() {
         const svgText = await response.text();
         
         // Extract the visitor count from the SVG text element
-        const textMatch = svgText.match(/<text[^>]*>(\d+)<\/text>/);
+        const textMatch = svgText.match(/<text[^>]*>(.*)<\/text>/);
         const count = textMatch ? textMatch[1] : '0';
         
         const visitorElement = document.querySelector('.visitor-count');
